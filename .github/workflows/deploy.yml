@@ -19,13 +19,13 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore .\src\Presentation\Nop.Web\Nop.Web.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build .\src\Presentation\Nop.Web\Nop.Web.csproj -c Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./src/Presentation/Nop.Web/Nop.Web.csproj -c Release -o ./publish
+        run: dotnet publish .\src\Presentation\Nop.Web\Nop.Web.csproj -c Release -o publish
 
       - name: Deploy to IIS
         shell: powershell
