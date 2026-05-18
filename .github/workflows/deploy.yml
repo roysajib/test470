@@ -33,5 +33,4 @@ jobs:
             & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
             -verb:sync `
             -source:contentPath="${{ github.workspace }}\publish" `
-            -dest:contentPath="${{ secrets.IIS_SITE_NAME }}",computerName="https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd",userName="${{ secrets.DEPLOYER_USERNAME }}",password="${{ secrets.DEPLOYER_PASSWORD }}",authType="Basic"
-            -allowUntrusted
+            -dest:contentPath="${{ secrets.IIS_SITE_NAME }}",computerName="https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd",userName="${{ secrets.DEPLOYER_USERNAME }}",password="${{ secrets.DEPLOYER_PASSWORD }}",authType="Basic",allowUntrusted="true"
