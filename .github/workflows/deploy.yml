@@ -10,13 +10,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
 
       - name: Restore
         run: dotnet restore
@@ -25,13 +25,13 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./Presentation/Nop.Web/Nop.Web.csproj -c Release -o ./publish
+        run: dotnet publish ./src/Presentation/Nop.Web/Nop.Web.csproj -c Release -o ./publish
 
       - name: Deploy to IIS
-        uses: microsoft/iis-deploy@v1
-        with:
-          website-name: ${{ secrets.IIS_SITE_NAME }}
-          server-computer-name: https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd
-          username: ${{ secrets.DEPLOYER_USERNAME }}
-          password: ${{ secrets.DEPLOYER_PASSWORD }}
-          package: ./publish
+        shell: powershell
+        run: |
+          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+          -verb:sync `
+          -source:contentPath="${{ github.workspace }}\publish" `
+          -dest:contentPath="${{ secrets.IIS_SITE_NAME }}",computerName="https://${{ secrets.IIS_SERVER }}:8172/msdeploy.axd?site=${{ secrets.IIS_SITE_NAME }}",userName="${{ secrets.DEPLOYER_USERNAME }}",password="${{ secrets.DEPLOYER_PASSWORD }}",authType="Basic" `
+          -allowUntrusted
